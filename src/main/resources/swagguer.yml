@@ -1,52 +1,91 @@
-openapi: 3.0.1
+openapi: 3.0.0
+
 info:
-  title: Book Shop
-  description: Book CRUD API.
-  version: 1.0.0
+  version: 0.0.1
+  title: Student Service
+  description: The Student service
+
+servers:
+  - url: /api/usuarios
+
+tags:
+  - name: "Student"
 
 paths:
-  /book:
-    get:
-      summary: Get Books
-      operationId: getBooks
+  /autenticar:
+    post:
+      summary: Autenticar um usuário
+      tags:
+        - "aute"
+      parameters:
+        - name: correlation-id
+          in: header
+          description: correlationId to track request.
+          required: true
+          schema:
+            type: string
+            format: ""
+      requestBody:
+        $ref: '#/components/requestBodies/StudentBody'
+      operationId: addStudent
       responses:
-        200:
-          description: successful operation
+        '201':
+          description: Created
+  /get/students:
+    get:
+      parameters:
+        - name: correlation-id
+          in: header
+          description: ID of pet to fetch
+          required: true
+          schema:
+            type: string
+            format: ""
+
+      summary: Get all students.
+      tags:
+        - "Student"
+
+      description: This is a Student service description
+      operationId: getAllStudent
+      responses:
+        "200":
+          description: This means its ok.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Book'
-    post:
-      summary: Add a Book
-      operationId: addBook
-      requestBody:
-        description: Book to be added in shop
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Book'
-        required: true
-      responses:
-        200:
-          description: Book Added
-          content:
-            application/json:
-              schema:
-                type: string
-      x-codegen-request-body-name: book
+                  $ref: '#/components/schemas/Student'
 components:
   schemas:
-    Book:
+    Student:
+      description: This is the Student model.
       type: object
       properties:
         id:
+          description: The ID of Student.
           type: integer
-          format: int64
-        title:
+        first_name:
+          description: The FirstName of student.
           type: string
-          example: Oathbringer
-        author:
+        last_name:
+          description: The LastName of Student.
           type: string
-          example: Brandon Sanderson
+        section:
+          description: The Class Section of student.
+          type: string
+        city:
+          description: The City Name of Student.
+          type: string
+        name:
+          description: The Full Name of student.
+          type: string
+  requestBodies:
+    StudentBody:
+      description: A JSON object containing pet information
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Student'
